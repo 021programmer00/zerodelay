@@ -156,11 +156,10 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-950 text-white overflow-x-hidden">
       {/* Background Elements */}
-      <div className="fixed inset-0 bg-gradient-to-br from-cyan-900/20 via-gray-950 to-purple-900/20"></div>
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-transparent to-transparent"></div>
+      <div className="fixed inset-0 bg-gradient-to-br from-cyan-900/5 via-transparent to-purple-900/5"></div>
 
       {/* Header */}
-      <header className="fixed top-0 w-full bg-gray-950/80 backdrop-blur-xl border-b border-gray-800/50 z-40">
+      <header className="fixed top-0 w-full bg-gray-950/90 backdrop-blur-xl border-b border-gray-800/50 z-40">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <img 

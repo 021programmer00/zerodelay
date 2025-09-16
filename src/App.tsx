@@ -1,5 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { X, Zap, Cpu, HardDrive, Shield, Clock, Users, Star, ChevronDown, ChevronRight, ExternalLink, Disc as Discord } from 'lucide-react';
+import { X, Zap, Cpu, HardDrive, Shield, Clock, Users, Star, ChevronDown, ChevronRight, ExternalLink, Disc as Discord, ZoomIn } from 'lucide-react';
+
+const ImageZoomModal = ({ isOpen, imageUrl, onClose }: { isOpen: boolean; imageUrl: string; onClose: () => void }) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="relative max-w-full max-h-full">
+        <button
+          onClick={onClose}
+          className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10 bg-black/50 rounded-full p-2"
+        >
+          <X size={24} />
+        </button>
+        
+        <img 
+          src={imageUrl} 
+          alt="Resultado em tela cheia" 
+          className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        />
+      </div>
+      
+      <div 
+        className="absolute inset-0 cursor-pointer" 
+        onClick={onClose}
+      />
+    </div>
+  );
+};
 
 const CouponModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const [timeLeft, setTimeLeft] = useState(24 * 60 * 60); // 24 hours in seconds
@@ -111,7 +152,7 @@ const FAQ = () => {
     },
     {
       question: "Posso fazer formatação?",
-      answer: "Sim — oferecemos ISO otimizada por +R$50 ou você pode usar uma ISO padrão do Windows."
+      answer: "Sim — oferecemos formatação completa com ISO semi-otimizada por R$50 (valor total) ou você pode usar uma ISO padrão do Windows."
     }
   ];
 
@@ -143,6 +184,7 @@ const FAQ = () => {
 
 function App() {
   const [showModal, setShowModal] = useState(false);
+  const [zoomImage, setZoomImage] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowModal(true), 2000);
@@ -215,7 +257,7 @@ function App() {
             <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-300 mb-12">
               <div className="flex items-center gap-2">
                 <Users className="text-cyan-400" size={16} />
-                +2700 clientes atendidos
+                +450 clientes atendidos
               </div>
               <div className="flex items-center gap-2">
                 <Zap className="text-purple-400" size={16} />
@@ -319,7 +361,7 @@ function App() {
 
           <div className="text-center mt-12">
             <p className="text-gray-400 text-sm">
-              💡 Oferecemos <span className="text-cyan-400">ISO otimizada</span> por +R$50 se desejar formatação completa
+              💡 Quer formatação + instalação limpa? <span className="text-cyan-400">ISO semi-otimizada por R$50</span> (valor total da formatação)
             </p>
           </div>
         </div>
@@ -331,40 +373,125 @@ function App() {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Resultados & Prova Social</h2>
             <div className="text-6xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent mb-4">
-              +2.700
+              +450
             </div>
             <p className="text-xl text-gray-300">clientes satisfeitos com resultados comprovados</p>
+            
+            <div className="mt-8 mb-12">
+              <h3 className="text-2xl font-semibold mb-6 text-white">Nossa Equipe Especializada</h3>
+              <div className="flex flex-wrap justify-center gap-6 text-lg">
+                <div className="bg-gradient-to-r from-cyan-500/20 to-purple-600/20 px-6 py-3 rounded-lg border border-cyan-500/30">
+                  <span className="text-cyan-400 font-semibold">TioRickOTZ</span>
+                </div>
+                <div className="bg-gradient-to-r from-purple-500/20 to-pink-600/20 px-6 py-3 rounded-lg border border-purple-500/30">
+                  <span className="text-purple-400 font-semibold">BlackOTZ</span>
+                </div>
+                <div className="bg-gradient-to-r from-green-500/20 to-emerald-600/20 px-6 py-3 rounded-lg border border-green-500/30">
+                  <span className="text-green-400 font-semibold">NineOTZ</span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6">
+              <div className="mb-4 relative group cursor-pointer" onClick={() => setZoomImage('https://i.imgur.com/JbGallv.jpeg')}>
+                <img 
+                  src="https://i.imgur.com/JbGallv.jpeg" 
+                  alt="Resultado FPS CS2" 
+                  className="w-full h-48 object-contain rounded-lg bg-gray-800/30"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-center justify-center">
+                  <ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" size={32} />
+                </div>
+              </div>
               <div className="flex items-center gap-2 mb-3">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="text-yellow-400 fill-current" size={16} />
                 ))}
               </div>
-              <p className="text-gray-300 mb-4">"Meu FPS subiu drasticamente! Serviço profissional e rápido."</p>
-              <p className="text-sm text-gray-400">— Gabriel M., CS:GO Player</p>
+              <p className="text-gray-300 mb-4">"FPS do CS2 aumentou significativamente! Resultado incrível."</p>
+              <p className="text-sm text-gray-400">— Cliente CS2</p>
             </div>
 
             <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6">
+              <div className="mb-4 relative group cursor-pointer" onClick={() => setZoomImage('https://i.imgur.com/Z4kHpsD.png')}>
+                <img 
+                  src="https://i.imgur.com/Z4kHpsD.png" 
+                  alt="Resultado FPS Valorant" 
+                  className="w-full h-48 object-contain rounded-lg bg-gray-800/30"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-center justify-center">
+                  <ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" size={32} />
+                </div>
+              </div>
               <div className="flex items-center gap-2 mb-3">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="text-yellow-400 fill-current" size={16} />
                 ))}
               </div>
-              <p className="text-gray-300 mb-4">"Serviço seguro e confiável. Nenhum problema com banimentos."</p>
-              <p className="text-sm text-gray-400">— Lucas S., Valorant Pro</p>
+              <p className="text-gray-300 mb-4">"Valorant rodando muito melhor! Otimização top demais."</p>
+              <p className="text-sm text-gray-400">— Cliente Valorant</p>
             </div>
 
             <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6">
+              <div className="mb-4 relative group cursor-pointer" onClick={() => setZoomImage('https://i.imgur.com/QZMUbLc.png')}>
+                <img 
+                  src="https://i.imgur.com/QZMUbLc.png" 
+                  alt="Resultado FPS Fortnite" 
+                  className="w-full h-48 object-contain rounded-lg bg-gray-800/30"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-center justify-center">
+                  <ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" size={32} />
+                </div>
+              </div>
               <div className="flex items-center gap-2 mb-3">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="text-yellow-400 fill-current" size={16} />
                 ))}
               </div>
-              <p className="text-gray-300 mb-4">"Vale cada centavo. PC rodando como nunca!"</p>
-              <p className="text-sm text-gray-400">— Amanda R., Streamer</p>
+              <p className="text-gray-300 mb-4">"Fortnite com FPS estável e alto! Recomendo muito."</p>
+              <p className="text-sm text-gray-400">— Cliente Fortnite</p>
+            </div>
+
+            <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6">
+              <div className="mb-4 relative group cursor-pointer" onClick={() => setZoomImage('https://i.imgur.com/Wf8OUCS.jpeg')}>
+                <img 
+                  src="https://i.imgur.com/Wf8OUCS.jpeg" 
+                  alt="Resultado otimização geral" 
+                  className="w-full h-48 object-contain rounded-lg bg-gray-800/30"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-center justify-center">
+                  <ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" size={32} />
+                </div>
+              </div>
+              <div className="flex items-center gap-2 mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="text-yellow-400 fill-current" size={16} />
+                ))}
+              </div>
+              <p className="text-gray-300 mb-4">"Sistema muito mais rápido! Diferença notável na performance."</p>
+              <p className="text-sm text-gray-400">— Cliente Satisfeito</p>
+            </div>
+
+            <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6">
+              <div className="mb-4 relative group cursor-pointer" onClick={() => setZoomImage('https://i.imgur.com/MQ7XHXT.png')}>
+                <img 
+                  src="https://i.imgur.com/MQ7XHXT.png" 
+                  alt="Resultado benchmark" 
+                  className="w-full h-48 object-contain rounded-lg bg-gray-800/30"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-lg flex items-center justify-center">
+                  <ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" size={32} />
+                </div>
+              </div>
+              <div className="flex items-center gap-2 mb-3">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="text-yellow-400 fill-current" size={16} />
+                ))}
+              </div>
+              <p className="text-gray-300 mb-4">"Benchmark melhorou muito! Serviço profissional e eficiente."</p>
+              <p className="text-sm text-gray-400">— Cliente Gaming</p>
             </div>
           </div>
 
@@ -381,18 +508,19 @@ function App() {
       <section id="pricing" className="py-20 px-4 bg-gray-900/30">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Pacote Único</h2>
-            <p className="text-gray-400 text-lg">Otimização completa com tudo incluso</p>
+            <h2 className="text-4xl font-bold mb-4">Nossos Pacotes</h2>
+            <p className="text-gray-400 text-lg">Escolha o serviço ideal para você</p>
           </div>
 
-          <div className="max-w-lg mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Pacote Otimização */}
             <div className="bg-gradient-to-b from-gray-900 to-gray-800 border-2 border-cyan-500 rounded-2xl p-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-gradient-to-l from-orange-500 to-red-600 text-white px-6 py-2 rounded-bl-lg font-bold text-sm">
                 30% OFF
               </div>
               
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold mb-4 text-white">Otimização ZeroDelay</h3>
+                <h3 className="text-2xl font-bold mb-4 text-white">Otimização Simples</h3>
                 <p className="text-gray-300 mb-6">Tudo incluso: otimização completa, suporte via chat, relatório final</p>
                 
                 <div className="mb-6">
@@ -440,6 +568,67 @@ function App() {
               <div className="text-xs text-gray-400 text-center mt-4">
                 Sem reembolso após execução do serviço (produto digital).<br />
                 Resultados variam conforme hardware.
+              </div>
+            </div>
+
+            {/* Pacote Formatação */}
+            <div className="bg-gradient-to-b from-gray-900 to-gray-800 border-2 border-purple-500 rounded-2xl p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-gradient-to-l from-purple-500 to-indigo-600 text-white px-6 py-2 rounded-bl-lg font-bold text-sm">
+                COMPLETO
+              </div>
+              
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold mb-4 text-white">Formatação + ISO Otimizada</h3>
+                <p className="text-gray-300 mb-6">Instalação limpa do zero com ISO semi-otimizada + todos os benefícios</p>
+                
+                <div className="mb-6">
+                  <div className="text-5xl font-bold text-white mb-2">R$ 49,99</div>
+                  <div className="text-purple-400 font-semibold">Valor total da formatação</div>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                {[
+                  "Formatação completa do PC",
+                  "ISO Windows semi-otimizada",
+                  "Instalação limpa do zero",
+                  "Todos os benefícios da otimização",
+                  "Drivers atualizados",
+                  "Sistema 100% limpo e otimizado",
+                  "Suporte 24/7 no Discord",
+                  "Relatório final detalhado"
+                ].map((feature, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full flex-shrink-0"></div>
+                    <span className="text-gray-300">{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="space-y-3">
+                <a
+                  href="https://discord.gg/cNWypfzT9y"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2"
+                >
+                  <Discord size={20} />
+                  Contratar Formatação
+                </a>
+                <a
+                  href="https://discord.gg/cNWypfzT9y"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
+                  <ExternalLink size={18} />
+                  Pagar agora
+                </a>
+              </div>
+
+              <div className="text-xs text-gray-400 text-center mt-4">
+                Sem reembolso após execução do serviço (produto digital).<br />
+                Tempo estimado: 1-2 horas para formatação completa.
               </div>
             </div>
           </div>
@@ -531,7 +720,7 @@ function App() {
                 <div className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
                   ZeroDelay
                 </div>
-                <div className="text-sm text-gray-400">+2.700 clientes atendidos</div>
+                <div className="text-sm text-gray-400">+450 clientes atendidos</div>
               </div>
             </div>
 
@@ -551,12 +740,17 @@ function App() {
           </div>
 
           <div className="text-center mt-8 pt-8 border-t border-gray-800 text-gray-400 text-sm">
-            © 2024 ZeroDelay — Técnicos certificados • Atendimento rápido • Suporte Premium
+            © 2024 ZeroDelay — Equipe: TioRickOTZ, BlackOTZ, NineOTZ • Atendimento rápido • Suporte Premium
           </div>
         </div>
       </footer>
 
       <CouponModal isOpen={showModal} onClose={() => setShowModal(false)} />
+      <ImageZoomModal 
+        isOpen={!!zoomImage} 
+        imageUrl={zoomImage || ''} 
+        onClose={() => setZoomImage(null)} 
+      />
     </div>
   );
 }
